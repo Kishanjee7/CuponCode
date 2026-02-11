@@ -4,7 +4,7 @@
 
 const CONFIG = {
   // Google Apps Script Web App URL - UPDATE THIS after deployment
-  API_URL: 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL',
+  API_URL: 'https://script.google.com/macros/s/AKfycbwgqGvLl8QaCKO40U6qoZPpp0xqyO3pL5rnTzLtChQCFergtZwvi8VPir5nx_uf6M_k/exec',
 
   // App Info
   APP_NAME: 'CuponCode',
