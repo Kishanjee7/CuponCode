@@ -4,7 +4,7 @@
 // ============================================================
 
 // ---- CONFIGURATION ----
-const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE';
+const SPREADSHEET_ID = '1YqdUGN9EnMY6AUt_oNXtgDk_4A7lba6_Ykn-kU8_l3w';
 const ADMIN_EMAIL = 'admin@cuponcode.com';
 const ADMIN_PASSWORD = 'admin123'; // Change this! Used for initial seed only
 const OTP_EXPIRY_MINUTES = 10;
