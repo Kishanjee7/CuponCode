@@ -1,11 +1,12 @@
 # 🎟️ CuponCode — Secure Coupon Marketplace
 
+Link:- https://kishanjee7.github.io/CuponCode/
+
 A modern, fully-featured coupon marketplace web application where users can buy and sell verified discount coupons using a virtual coin system.
 
 ![Platform](https://img.shields.io/badge/platform-web-blue)
 ![Backend](https://img.shields.io/badge/backend-Google%20Apps%20Script-green)
 ![Database](https://img.shields.io/badge/database-Google%20Sheets-orange)
-![License](https://img.shields.io/badge/license-MIT-purple)
 
 ---
 
@@ -210,11 +211,7 @@ CuponCode/
 - **Google Sheets** may slow down with 10,000+ rows per sheet
 - **No real-time updates** — data refreshes on page load/action
 
----
 
-## 📄 License
-
-MIT License — feel free to use, modify, and distribute.
 
 ---
 
