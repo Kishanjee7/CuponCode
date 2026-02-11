@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupon Management – Admin – CuponCode</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+
+<body>
+    <div class="app-layout" id="app">
+        <main class="main-content">
+            <div class="page-content page-transition">
+                <div class="page-header">
+                    <h1>🎫 Coupon Management</h1>
+                    <p>Review, approve, or reject coupon submissions.</p>
+                </div>
+
+                <div class="tab-nav">
+                    <button class="tab-item active" data-status="all"
+                        onclick="Admin.loadAllCoupons(1, 'all')">All</button>
+                    <button class="tab-item" data-status="pending" onclick="Admin.loadAllCoupons(1, 'pending')">⏳
+                        Pending</button>
+                    <button class="tab-item" data-status="approved" onclick="Admin.loadAllCoupons(1, 'approved')">✅
+                        Approved</button>
+                    <button class="tab-item" data-status="sold" onclick="Admin.loadAllCoupons(1, 'sold')">💰
+                        Sold</button>
+                    <button class="tab-item" data-status="rejected" onclick="Admin.loadAllCoupons(1, 'rejected')">❌
+                        Rejected</button>
+                </div>
+
+                <div id="admin-coupons-list">
+                    <div class="skeleton skeleton-text" style="height: 50px;"></div>
+                    <div class="skeleton skeleton-text" style="height: 50px;"></div>
+                    <div class="skeleton skeleton-text" style="height: 50px;"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/session.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/router.js"></script>
+    <script>
+        if (!Session.requireAdmin()) { /* redirects */ }
+        document.getElementById('app').insertAdjacentHTML('afterbegin', Router.adminSidebar());
+        document.querySelector('.main-content').insertAdjacentHTML('afterbegin', Router.topHeader('Coupon Management'));
+        Utils.initSidebar();
+        Admin.loadAllCoupons();
+    </script>
+</body>
+
+</html>

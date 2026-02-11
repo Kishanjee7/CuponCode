@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CuponCode – Secure Coupon Marketplace</title>
+    <meta name="description"
+        content="CuponCode - Buy and sell verified discount coupons securely using our coin-based marketplace.">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- If logged in, show app layout; if not, show public marketplace -->
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/session.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/coupons.js"></script>
+    <script src="js/router.js"></script>
+    <script>
+        const isLoggedIn = Session.isLoggedIn();
+
+        if (isLoggedIn) {
+            // Logged-in: full app layout
+            document.getElementById('app').className = 'app-layout';
+            document.getElementById('app').innerHTML = `
+        ${Router.userSidebar()}
+        <main class="main-content">
+          ${Router.topHeader('Marketplace')}
+          <div class="page-content page-transition">
+            ${renderMarketplaceContent()}
+          </div>
+        </main>
+      `;
+            document.body.insertAdjacentHTML('beforeend', Router.mobileNav());
+            Utils.initSidebar();
+        } else {
+            // Public: landing page style
+            document.getElementById('app').innerHTML = renderPublicPage();
+        }
+
+        function renderMarketplaceContent() {
+            return `
+        <div class="page-header">
+          <h1>🏪 Marketplace</h1>
+          <p>Browse and buy verified coupon codes from trusted sellers.</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="flex gap-4 mb-6 flex-wrap items-center">
+          <div class="search-bar" style="flex: 1; min-width: 200px;">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-input" placeholder="Search coupons..." oninput="Utils.debounce(() => Coupons.loadMarketplace(), 500)()">
+          </div>
+          <select id="category-filter" class="btn btn-secondary" style="padding: var(--space-2) var(--space-4); min-width: 150px; appearance: auto;" onchange="Coupons.loadMarketplace()">
+            <option value="">All Categories</option>
+          </select>
+          <select id="sort-filter" class="btn btn-secondary" style="padding: var(--space-2) var(--space-4); min-width: 140px; appearance: auto;" onchange="Coupons.loadMarketplace()">
+            <option value="newest">Newest First</option>
+            <option value="price_low">Price: Low to High</option>
+            <option value="price_high">Price: High to Low</option>
+          </select>
+        </div>
+
+        <!-- Coupon Grid -->
+        <div class="coupons-grid" id="coupons-grid">
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+        </div>
+        <div id="pagination"></div>
+      `;
+        }
+
+        function renderPublicPage() {
+            return `
+        <!-- Public Navigation -->
+        <nav style="display: flex; align-items: center; justify-content: space-between; padding: var(--space-4) var(--space-8); position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-sticky); background: rgba(10,10,26,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-subtle);">
+          <a href="index.html" class="sidebar-logo" style="text-decoration: none;">
+            <div class="logo-icon">🎟️</div>
+            <span class="logo-text">CuponCode</span>
+          </a>
+          <div class="flex gap-3">
+            <a href="login.html" class="btn btn-ghost">Sign In</a>
+            <a href="register.html" class="btn btn-primary">Get Started</a>
+          </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section style="min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: var(--space-20) var(--space-6); position: relative; z-index: var(--z-base);">
+          <div class="animate-fadeInUp" style="max-width: 700px;">
+            <div style="font-size: 4rem; margin-bottom: var(--space-6);" class="animate-float">🎟️</div>
+            <h1 style="font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: var(--space-4); line-height: 1.1;">
+              The Trusted
+              <span style="background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Coupon Marketplace</span>
+            </h1>
+            <p style="font-size: var(--fs-lg); color: var(--text-secondary); max-width: 550px; margin: 0 auto var(--space-8);">
+              Buy and sell verified discount coupons securely. Every coupon is admin-verified for authenticity.
+            </p>
+            <div class="flex gap-4 justify-center flex-wrap">
+              <a href="register.html" class="btn btn-primary btn-lg">🚀 Get Started Free</a>
+              <a href="#features" class="btn btn-secondary btn-lg">Learn More</a>
+            </div>
+            <div class="flex gap-8 justify-center mt-8" style="color: var(--text-tertiary); font-size: var(--fs-sm);">
+              <span>🎁 100 Free Coins</span>
+              <span>✅ Verified Coupons</span>
+              <span>🔒 Secure Trading</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" style="padding: var(--space-20) var(--space-6); position: relative; z-index: var(--z-base);">
+          <div class="container" style="max-width: 1100px; margin: 0 auto;">
+            <h2 class="text-center mb-2" style="font-size: var(--fs-3xl);">Why CuponCode?</h2>
+            <p class="text-center mb-8" style="color: var(--text-secondary);">A secure, fair, and transparent coupon marketplace.</p>
+            <div class="grid gap-6" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+              <div class="card hover-lift" style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: var(--space-4);">🛡️</div>
+                <h4 class="mb-2">Admin Verified</h4>
+                <p style="font-size: var(--fs-sm);">Every coupon is reviewed by admin before being listed. No scams, no fakes.</p>
+              </div>
+              <div class="card hover-lift" style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: var(--space-4);">🔒</div>
+                <h4 class="mb-2">Single Ownership</h4>
+                <p style="font-size: var(--fs-sm);">Each coupon can only be sold once. Once purchased, it's yours alone.</p>
+              </div>
+              <div class="card hover-lift" style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: var(--space-4);">🪙</div>
+                <h4 class="mb-2">Coin Economy</h4>
+                <p style="font-size: var(--fs-sm);">Get 100 free coins on signup. Earn more by selling coupons and referring friends.</p>
+              </div>
+              <div class="card hover-lift" style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: var(--space-4);">🤝</div>
+                <h4 class="mb-2">Referral Rewards</h4>
+                <p style="font-size: var(--fs-sm);">Earn 50 coins for every friend you refer. No limit on earnings!</p>
+              </div>
+              <div class="card hover-lift" style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: var(--space-4);">📱</div>
+                <h4 class="mb-2">Fully Responsive</h4>
+                <p style="font-size: var(--fs-sm);">Works perfectly on mobile, tablet, and desktop devices.</p>
+              </div>
+              <div class="card hover-lift" style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: var(--space-4);">💸</div>
+                <h4 class="mb-2">Zero Commission</h4>
+                <p style="font-size: var(--fs-sm);">No platform fees. The full coupon price goes to the seller.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section style="padding: var(--space-20) var(--space-6); text-align: center; position: relative; z-index: var(--z-base);">
+          <div class="card" style="max-width: 700px; margin: 0 auto; text-align: center; background: var(--accent-gradient); border: none; padding: var(--space-12);">
+            <h2 style="color: white; margin-bottom: var(--space-4);">Ready to Start Trading?</h2>
+            <p style="color: rgba(255,255,255,0.8); margin-bottom: var(--space-6);">Join CuponCode today and get 100 free coins to start buying coupons.</p>
+            <a href="register.html" class="btn btn-lg" style="background: white; color: var(--accent-primary); font-weight: var(--fw-bold);">Create Free Account →</a>
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <footer style="padding: var(--space-8) var(--space-6); border-top: 1px solid var(--border-subtle); text-align: center; position: relative; z-index: var(--z-base);">
+          <p style="color: var(--text-tertiary); font-size: var(--fs-sm);">
+            © 2026 CuponCode. All rights reserved. | Built with ❤️
+          </p>
+        </footer>
+      `;
+        }
+
+        // Load marketplace data if logged in
+        if (isLoggedIn) {
+            Coupons.loadCategoryOptions('category-filter');
+            Coupons.loadMarketplace();
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management – Admin – CuponCode</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+
+<body>
+    <div class="app-layout" id="app">
+        <main class="main-content">
+            <div class="page-content page-transition">
+                <div class="page-header">
+                    <h1>👥 User Management</h1>
+                    <p>Manage user accounts, statuses, and coin balances.</p>
+                </div>
+
+                <!-- Search -->
+                <div class="search-bar mb-6" style="max-width: 100%;">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="user-search" placeholder="Search by username or email..."
+                        oninput="Utils.debounce(() => Admin.loadUsers(1, this.value), 400)()">
+                </div>
+
+                <div id="users-list">
+                    <div class="skeleton skeleton-text" style="height: 50px;"></div>
+                    <div class="skeleton skeleton-text" style="height: 50px;"></div>
+                    <div class="skeleton skeleton-text" style="height: 50px;"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/session.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/router.js"></script>
+    <script>
+        if (!Session.requireAdmin()) { /* redirects */ }
+        document.getElementById('app').insertAdjacentHTML('afterbegin', Router.adminSidebar());
+        document.querySelector('.main-content').insertAdjacentHTML('afterbegin', Router.topHeader('User Management'));
+        Utils.initSidebar();
+        Admin.loadUsers();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet – CuponCode</title>
+    <meta name="description" content="View your coin balance and transaction history">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+
+<body>
+    <div class="app-layout" id="app">
+        <main class="main-content">
+            <div class="page-content page-transition">
+                <div class="page-header">
+                    <h1>💰 Wallet</h1>
+                    <p>Track your coin balance and transaction history.</p>
+                </div>
+
+                <!-- Balance Card -->
+                <div class="card mb-8"
+                    style="text-align: center; background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(251,191,36,0.05)); border-color: rgba(245,158,11,0.2);">
+                    <p
+                        style="color: var(--text-tertiary); font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--space-2);">
+                        Available Balance</p>
+                    <div class="coin-display coin-lg" style="justify-content: center; font-size: var(--fs-5xl);">
+                        <span class="coin-icon" style="width: 48px; height: 48px; font-size: 28px;">₵</span>
+                        <span id="wallet-balance">0</span>
+                    </div>
+                    <div class="flex justify-center gap-3 mt-6">
+                        <a href="index.html" class="btn btn-primary">🛒 Buy Coupons</a>
+                        <a href="referral.html" class="btn btn-secondary">🤝 Earn More</a>
+                    </div>
+                </div>
+
+                <!-- Transaction Filters -->
+                <h3 class="mb-4">Transaction History</h3>
+                <div class="tab-nav">
+                    <button class="tab-item active" data-type="all" onclick="Wallet.load(1, 'all')">All</button>
+                    <button class="tab-item" data-type="coupon_sale" onclick="Wallet.load(1, 'coupon_sale')">💰
+                        Earned</button>
+                    <button class="tab-item" data-type="coupon_purchase" onclick="Wallet.load(1, 'coupon_purchase')">🛒
+                        Spent</button>
+                    <button class="tab-item" data-type="referral_bonus" onclick="Wallet.load(1, 'referral_bonus')">🤝
+                        Referral</button>
+                    <button class="tab-item" data-type="admin_adjustment"
+                        onclick="Wallet.load(1, 'admin_adjustment')">⚙️ Adjustments</button>
+                </div>
+
+                <div id="transactions-list">
+                    <div class="skeleton skeleton-text" style="height: 50px;"></div>
+                    <div class="skeleton skeleton-text" style="height: 50px;"></div>
+                    <div class="skeleton skeleton-text" style="height: 50px;"></div>
+                </div>
+                <div id="wallet-pagination"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/session.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/wallet.js"></script>
+    <script src="js/router.js"></script>
+    <script>
+        if (!Session.requireAuth()) { /* redirects */ }
+        document.getElementById('app').insertAdjacentHTML('afterbegin', Router.userSidebar());
+        document.querySelector('.main-content').insertAdjacentHTML('afterbegin', Router.topHeader('Wallet'));
+        document.body.insertAdjacentHTML('beforeend', Router.mobileNav());
+        Utils.initSidebar();
+
+        const s = Session.get();
+        if (s) document.getElementById('wallet-balance').textContent = Utils.formatCoins(s.coins || 0);
+        Wallet.load();
+    </script>
+</body>
+
+</html>

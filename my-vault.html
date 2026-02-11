@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Vault – CuponCode</title>
+    <meta name="description" content="Your private coupon vault - view purchased coupon codes">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+
+<body>
+    <div class="app-layout" id="app">
+        <main class="main-content">
+            <div class="page-content page-transition">
+                <div class="page-header">
+                    <h1>🔐 My Vault</h1>
+                    <p>Your purchased coupons are stored securely here. Only you and admin can see them.</p>
+                </div>
+
+                <div class="coupons-grid" id="vault-grid">
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/session.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/coupons.js"></script>
+    <script src="js/router.js"></script>
+    <script>
+        if (!Session.requireAuth()) { /* redirects */ }
+        document.getElementById('app').insertAdjacentHTML('afterbegin', Router.userSidebar());
+        document.querySelector('.main-content').insertAdjacentHTML('afterbegin', Router.topHeader('My Vault'));
+        document.body.insertAdjacentHTML('beforeend', Router.mobileNav());
+        Utils.initSidebar();
+        Coupons.loadVault();
+    </script>
+</body>
+
+</html>

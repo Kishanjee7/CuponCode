@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard – CuponCode</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+
+<body>
+    <div class="app-layout" id="app">
+        <main class="main-content">
+            <div class="page-content page-transition">
+                <div class="page-header">
+                    <h1>🛡️ Admin Dashboard</h1>
+                    <p>Overview of your entire CuponCode platform.</p>
+                </div>
+
+                <div class="stats-grid stagger-animate">
+                    <div class="stat-card stat-blue">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-value" id="stat-users">0</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card stat-purple">
+                        <div class="stat-icon">🎫</div>
+                        <div class="stat-value" id="stat-coupons">0</div>
+                        <div class="stat-label">Total Coupons</div>
+                    </div>
+                    <div class="stat-card stat-red">
+                        <div class="stat-icon">⏳</div>
+                        <div class="stat-value" id="stat-pending">0</div>
+                        <div class="stat-label">Pending Review</div>
+                    </div>
+                    <div class="stat-card stat-green">
+                        <div class="stat-icon">💳</div>
+                        <div class="stat-value" id="stat-transactions">0</div>
+                        <div class="stat-label">Transactions</div>
+                    </div>
+                    <div class="stat-card stat-gold">
+                        <div class="stat-icon">🪙</div>
+                        <div class="stat-value" id="stat-coins-circulating">0</div>
+                        <div class="stat-label">Coins in Circulation</div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <h3 class="mb-4">Quick Actions</h3>
+                <div class="grid gap-4 mb-8" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                    <a href="admin-coupons.html" class="card hover-lift"
+                        style="text-decoration: none; text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: var(--space-3);">🎫</div>
+                        <h4>Review Coupons</h4>
+                        <p style="font-size: var(--fs-sm);">Verify pending coupons</p>
+                    </a>
+                    <a href="admin-categories.html" class="card hover-lift"
+                        style="text-decoration: none; text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: var(--space-3);">📁</div>
+                        <h4>Manage Categories</h4>
+                        <p style="font-size: var(--fs-sm);">Create & edit categories</p>
+                    </a>
+                    <a href="admin-users.html" class="card hover-lift"
+                        style="text-decoration: none; text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: var(--space-3);">👥</div>
+                        <h4>Manage Users</h4>
+                        <p style="font-size: var(--fs-sm);">User accounts & coins</p>
+                    </a>
+                    <a href="admin-transactions.html" class="card hover-lift"
+                        style="text-decoration: none; text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: var(--space-3);">💳</div>
+                        <h4>View Transactions</h4>
+                        <p style="font-size: var(--fs-sm);">All platform transactions</p>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/session.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/router.js"></script>
+    <script>
+        if (!Session.requireAdmin()) { /* redirects */ }
+        document.getElementById('app').insertAdjacentHTML('afterbegin', Router.adminSidebar());
+        document.querySelector('.main-content').insertAdjacentHTML('afterbegin', Router.topHeader('Admin Dashboard'));
+        Utils.initSidebar();
+        Admin.loadStats();
+    </script>
+</body>
+
+</html>

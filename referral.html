@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referrals – CuponCode</title>
+    <meta name="description" content="Refer friends to CuponCode and earn coins">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+
+<body>
+    <div class="app-layout" id="app">
+        <main class="main-content">
+            <div class="page-content page-transition">
+                <div class="page-header">
+                    <h1>🤝 Referral Program</h1>
+                    <p>Share your referral code and earn coins when friends sign up!</p>
+                </div>
+
+                <!-- Referral Stats -->
+                <div class="stats-grid mb-8 stagger-animate">
+                    <div class="stat-card stat-green">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-value" id="total-referrals">0</div>
+                        <div class="stat-label">Total Referrals</div>
+                    </div>
+                    <div class="stat-card stat-gold">
+                        <div class="stat-icon">🪙</div>
+                        <div class="stat-value" id="referral-coins">0</div>
+                        <div class="stat-label">Coins Earned</div>
+                    </div>
+                    <div class="stat-card stat-purple">
+                        <div class="stat-icon">🎁</div>
+                        <div class="stat-value">50</div>
+                        <div class="stat-label">Coins Per Referral</div>
+                    </div>
+                </div>
+
+                <!-- Referral Code & Link -->
+                <div class="card mb-6">
+                    <h3 class="card-title mb-4">Your Referral Code</h3>
+                    <div
+                        style="display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4); background: var(--bg-glass); border-radius: var(--radius-md); border: 2px dashed var(--border-strong);">
+                        <code id="referral-code"
+                            style="font-size: var(--fs-2xl); font-weight: var(--fw-extrabold); letter-spacing: 0.15em; color: var(--text-accent); flex: 1; text-align: center;">
+              --------
+            </code>
+                        <button class="btn btn-primary btn-sm" onclick="Referral.copyCode()">📋 Copy</button>
+                    </div>
+                </div>
+
+                <div class="card mb-6">
+                    <h3 class="card-title mb-4">Share Your Link</h3>
+                    <div style="display: flex; gap: var(--space-3);">
+                        <input type="text" id="referral-link" readonly
+                            style="flex: 1; padding: var(--space-3) var(--space-4); background: var(--bg-input); border: 1px solid var(--border-default); border-radius: var(--radius-md); color: var(--text-secondary); font-size: var(--fs-sm);">
+                        <button class="btn btn-secondary" onclick="Referral.copyLink()">📋 Copy</button>
+                        <button class="btn btn-primary" onclick="Referral.shareLink()">📤 Share</button>
+                    </div>
+                </div>
+
+                <!-- Referred Users -->
+                <div class="card">
+                    <h3 class="card-title mb-4">Referred Users</h3>
+                    <div id="referred-users">
+                        <div class="skeleton skeleton-text" style="height: 60px;"></div>
+                        <div class="skeleton skeleton-text" style="height: 60px;"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/session.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/referral.js"></script>
+    <script src="js/router.js"></script>
+    <script>
+        if (!Session.requireAuth()) { /* redirects */ }
+        document.getElementById('app').insertAdjacentHTML('afterbegin', Router.userSidebar());
+        document.querySelector('.main-content').insertAdjacentHTML('afterbegin', Router.topHeader('Referrals'));
+        document.body.insertAdjacentHTML('beforeend', Router.mobileNav());
+        Utils.initSidebar();
+        Referral.load();
+    </script>
+</body>
+
+</html>

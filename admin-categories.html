@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories – Admin – CuponCode</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+
+<body>
+    <div class="app-layout" id="app">
+        <main class="main-content">
+            <div class="page-content page-transition">
+                <div class="page-header flex justify-between items-center flex-wrap gap-4">
+                    <div>
+                        <h1>📁 Category Management</h1>
+                        <p>Create, edit, and delete coupon categories.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="Admin.showAddCategory()">➕ Add Category</button>
+                </div>
+
+                <div class="card">
+                    <div id="categories-list">
+                        <div class="skeleton skeleton-text" style="height: 60px;"></div>
+                        <div class="skeleton skeleton-text" style="height: 60px;"></div>
+                        <div class="skeleton skeleton-text" style="height: 60px;"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/session.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/router.js"></script>
+    <script>
+        if (!Session.requireAdmin()) { /* redirects */ }
+        document.getElementById('app').insertAdjacentHTML('afterbegin', Router.adminSidebar());
+        document.querySelector('.main-content').insertAdjacentHTML('afterbegin', Router.topHeader('Categories'));
+        Utils.initSidebar();
+        Admin.loadCategories();
+    </script>
+</body>
+
+</html>

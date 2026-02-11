@@ -1,0 +1,23 @@
+# CuponCode .gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Env files (if added later)
+.env
+.env.local
+
+# Node (if using npx serve or similar)
+node_modules/
+package-lock.json
+
+# Logs
+*.log

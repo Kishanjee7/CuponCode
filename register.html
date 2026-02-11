@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register – CuponCode</title>
+    <meta name="description" content="Create your CuponCode account and start trading coupons">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+
+<body>
+    <div class="auth-layout">
+        <!-- Left Branding Panel -->
+        <div class="auth-left">
+            <div class="auth-brand">
+                <div class="brand-icon animate-float">🎟️</div>
+                <h1>CuponCode</h1>
+                <p>Join thousands of users buying and selling verified coupons.</p>
+            </div>
+            <div class="auth-features stagger-animate">
+                <div class="auth-feature">
+                    <div class="feature-icon" style="background: var(--warning-bg); color: var(--warning);">🎁</div>
+                    <span class="feature-text">Get 100 bonus coins on signup</span>
+                </div>
+                <div class="auth-feature">
+                    <div class="feature-icon" style="background: var(--success-bg); color: var(--success);">🤝</div>
+                    <span class="feature-text">Earn 50 coins per referral</span>
+                </div>
+                <div class="auth-feature">
+                    <div class="feature-icon" style="background: var(--info-bg); color: var(--info);">🛡️</div>
+                    <span class="feature-text">100% verified coupons</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Form Panel -->
+        <div class="auth-right">
+            <div class="auth-form-container animate-fadeInUp">
+                <h2>Create Account</h2>
+                <p class="auth-subtitle">Start your coupon trading journey today</p>
+
+                <form id="register-form" onsubmit="Auth.handleRegister(event)">
+                    <div class="input-group">
+                        <label for="reg-email">Email Address</label>
+                        <input type="email" id="reg-email" placeholder="you@example.com" required autocomplete="email">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="reg-username">Username</label>
+                        <input type="text" id="reg-username" placeholder="Choose a username" required minlength="3"
+                            autocomplete="username">
+                        <span class="input-hint">At least 3 characters</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="reg-password">Password</label>
+                        <div style="position: relative;">
+                            <input type="password" id="reg-password" placeholder="Create a strong password" required
+                                minlength="8" autocomplete="new-password">
+                            <button type="button" class="toggle-password" onclick="togglePassword('reg-password', this)"
+                                style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-tertiary);cursor:pointer;">👁️</button>
+                        </div>
+                        <div class="password-strength" id="password-strength">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="reg-confirm-password">Confirm Password</label>
+                        <input type="password" id="reg-confirm-password" placeholder="Confirm your password" required
+                            autocomplete="new-password">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="reg-referral">Referral Code <small>(optional)</small></label>
+                        <input type="text" id="reg-referral" placeholder="Enter referral code">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">
+                        Create Account
+                    </button>
+                </form>
+
+                <div class="auth-footer">
+                    Already have an account? <a href="login.html">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/session.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        if (Session.isLoggedIn()) {
+            window.location.href = 'dashboard.html';
+        }
+        Auth.initPasswordStrength('reg-password', 'password-strength');
+
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                btn.textContent = '👁️';
+            }
+        }
+    </script>
+</body>
+
+</html>

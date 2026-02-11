@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard – CuponCode</title>
+    <meta name="description" content="Your CuponCode dashboard - manage coupons, coins, and referrals">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+
+<body>
+    <div class="app-layout" id="app">
+        <!-- Sidebar injected by JS -->
+        <main class="main-content">
+            <!-- Header injected by JS -->
+            <div class="page-content page-transition">
+                <!-- Welcome Banner -->
+                <div class="card mb-8" style="background: var(--accent-gradient); border: none;">
+                    <div class="flex items-center justify-between flex-wrap gap-4">
+                        <div>
+                            <h1 style="color: white; font-size: var(--fs-2xl); margin-bottom: var(--space-2);">
+                                Welcome back, <span id="welcome-name">User</span>! 👋
+                            </h1>
+                            <p style="color: rgba(255,255,255,0.8); margin: 0;">
+                                Here's what's happening with your coupons today.
+                            </p>
+                        </div>
+                        <div class="coin-display coin-lg" style="color: white;">
+                            <span class="coin-icon" style="box-shadow: 0 0 30px rgba(255,255,255,0.3);">₵</span>
+                            <span id="dashboard-balance">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid stagger-animate">
+                    <div class="stat-card stat-purple">
+                        <div class="stat-icon">📤</div>
+                        <div class="stat-value" id="stat-uploaded">0</div>
+                        <div class="stat-label">Uploaded</div>
+                    </div>
+                    <div class="stat-card stat-green">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-value" id="stat-approved">0</div>
+                        <div class="stat-label">Approved</div>
+                    </div>
+                    <div class="stat-card stat-blue">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-value" id="stat-sold">0</div>
+                        <div class="stat-label">Sold</div>
+                    </div>
+                    <div class="stat-card stat-gold">
+                        <div class="stat-icon">🛒</div>
+                        <div class="stat-value" id="stat-purchased">0</div>
+                        <div class="stat-label">Purchased</div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <h3 class="mb-4">Quick Actions</h3>
+                <div class="grid gap-4 mb-8" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <a href="upload-coupon.html" class="card hover-lift"
+                        style="text-decoration: none; text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: var(--space-3);">📤</div>
+                        <h4>Upload Coupon</h4>
+                        <p style="font-size: var(--fs-sm);">Submit a coupon for verification</p>
+                    </a>
+                    <a href="index.html" class="card hover-lift" style="text-decoration: none; text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: var(--space-3);">🏪</div>
+                        <h4>Browse Market</h4>
+                        <p style="font-size: var(--fs-sm);">Find and buy verified coupons</p>
+                    </a>
+                    <a href="referral.html" class="card hover-lift" style="text-decoration: none; text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: var(--space-3);">🤝</div>
+                        <h4>Refer Friends</h4>
+                        <p style="font-size: var(--fs-sm);">Earn ${CONFIG?.REFERRAL_REWARD || 50} coins per referral</p>
+                    </a>
+                    <a href="my-vault.html" class="card hover-lift" style="text-decoration: none; text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: var(--space-3);">🔐</div>
+                        <h4>My Vault</h4>
+                        <p style="font-size: var(--fs-sm);">View purchased coupons</p>
+                    </a>
+                </div>
+
+                <!-- Recent Activity -->
+                <h3 class="mb-4">Recent Activity</h3>
+                <div class="card">
+                    <div id="recent-activity">
+                        <div class="empty-state" style="padding: var(--space-8);">
+                            <div class="empty-icon">📋</div>
+                            <p class="empty-text">Your recent activity will appear here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Nav -->
+    <script src="js/config.js"></script>
+    <script src="js/session.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/router.js"></script>
+    <script>
+        if (!Session.requireAuth()) { /* redirects */ }
+
+        // Inject layout
+        document.getElementById('app').insertAdjacentHTML('afterbegin', Router.userSidebar());
+        document.querySelector('.main-content').insertAdjacentHTML('afterbegin', Router.topHeader('Dashboard'));
+        document.body.insertAdjacentHTML('beforeend', Router.mobileNav());
+
+        // Initialize
+        Utils.initSidebar();
+
+        const session = Session.get();
+        if (session) {
+            document.getElementById('welcome-name').textContent = session.username;
+            document.getElementById('dashboard-balance').textContent = Utils.formatCoins(session.coins || 0);
+        }
+
+        // Load dashboard data
+        async function loadDashboard() {
+            const result = await API.post('getDashboard');
+            if (result.success) {
+                document.getElementById('stat-uploaded').textContent = result.stats?.uploaded || 0;
+                document.getElementById('stat-approved').textContent = result.stats?.approved || 0;
+                document.getElementById('stat-sold').textContent = result.stats?.sold || 0;
+                document.getElementById('stat-purchased').textContent = result.stats?.purchased || 0;
+
+                if (result.recentActivity && result.recentActivity.length > 0) {
+                    const actDiv = document.getElementById('recent-activity');
+                    actDiv.innerHTML = result.recentActivity.map(a => `
+            <div class="flex items-center gap-3" style="padding: var(--space-3) 0; border-bottom: 1px solid var(--border-subtle);">
+              <span style="font-size: 1.2rem;">${a.icon || '📝'}</span>
+              <div style="flex: 1;">
+                <div style="font-size: var(--fs-sm);">${Utils.escapeHtml(a.description)}</div>
+                <div style="font-size: var(--fs-xs); color: var(--text-tertiary);">${Utils.timeAgo(a.createdAt)}</div>
+              </div>
+              ${a.amount ? `<span style="font-weight: 600; color: ${a.amount > 0 ? 'var(--success)' : 'var(--danger)'};">${a.amount > 0 ? '+' : ''}${a.amount} ₵</span>` : ''}
+            </div>
+          `).join('');
+                }
+            }
+        }
+        loadDashboard();
+    </script>
+</body>
+
+</html>

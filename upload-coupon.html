@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Coupon – CuponCode</title>
+    <meta name="description" content="Upload your coupon codes to sell on CuponCode marketplace">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+
+<body>
+    <div class="app-layout" id="app">
+        <main class="main-content">
+            <div class="page-content page-transition">
+                <div class="page-header">
+                    <h1>Upload Coupon</h1>
+                    <p>Submit your coupon for admin verification. Once approved, it will be listed on the marketplace.
+                    </p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); align-items: start;">
+                    <!-- Upload Form -->
+                    <div class="card">
+                        <h3 class="card-title mb-6">Coupon Details</h3>
+                        <form id="upload-form" onsubmit="Coupons.handleUpload(event)">
+                            <div class="input-group">
+                                <label for="coupon-category">Category</label>
+                                <select id="coupon-category" required>
+                                    <option value="">Select a category</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="coupon-code">Coupon Code</label>
+                                <input type="text" id="coupon-code" placeholder="e.g., SAVE20OFF" required
+                                    style="font-family: var(--font-mono); letter-spacing: 0.1em;">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="coupon-description">Description</label>
+                                <textarea id="coupon-description"
+                                    placeholder="Describe what this coupon offers, where it can be used, etc." required
+                                    maxlength="500"></textarea>
+                                <span class="input-hint">Max 500 characters</span>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="coupon-price">Price (in coins)</label>
+                                <input type="number" id="coupon-price" placeholder="Enter price in coins" required
+                                    min="1" max="10000">
+                                <span class="input-hint">Set a fair price between 1 and 10,000 coins</span>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block btn-lg">
+                                📤 Submit for Review
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Preview Card -->
+                    <div>
+                        <h4 class="mb-4" style="color: var(--text-secondary);">Preview</h4>
+                        <div class="coupon-card" id="preview-card">
+                            <div class="coupon-header">
+                                <span class="coupon-category" id="preview-category">Category</span>
+                                <span class="badge badge-pending">Pending</span>
+                            </div>
+                            <div class="coupon-body">
+                                <h4 class="coupon-title" id="preview-desc">Your coupon description will appear here...
+                                </h4>
+                                <p class="coupon-desc" style="font-family: var(--font-mono); color: var(--text-accent);"
+                                    id="preview-code">COUPONCODE</p>
+                            </div>
+                            <div class="coupon-footer">
+                                <div class="coupon-price">
+                                    <span class="coin-sm">₵</span>
+                                    <span id="preview-price">0</span>
+                                </div>
+                                <span style="font-size: var(--fs-xs); color: var(--text-tertiary);">Just now</span>
+                            </div>
+                        </div>
+
+                        <div class="card mt-6" style="background: var(--info-bg); border-color: rgba(59,130,246,0.2);">
+                            <h4 style="color: var(--info); margin-bottom: var(--space-2);">ℹ️ How it works</h4>
+                            <ul
+                                style="color: var(--text-secondary); font-size: var(--fs-sm); display: flex; flex-direction: column; gap: var(--space-2);">
+                                <li>1. Submit your coupon with details</li>
+                                <li>2. Admin reviews and verifies it</li>
+                                <li>3. Once approved, it's listed on the marketplace</li>
+                                <li>4. When someone buys it, you earn coins!</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/session.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/coupons.js"></script>
+    <script src="js/router.js"></script>
+    <script>
+        if (!Session.requireAuth()) { /* redirects */ }
+
+        document.getElementById('app').insertAdjacentHTML('afterbegin', Router.userSidebar());
+        document.querySelector('.main-content').insertAdjacentHTML('afterbegin', Router.topHeader('Upload Coupon'));
+        document.body.insertAdjacentHTML('beforeend', Router.mobileNav());
+        Utils.initSidebar();
+
+        // Load categories
+        Coupons.loadCategoryOptions('coupon-category');
+
+        // Live preview
+        document.getElementById('coupon-category').addEventListener('change', function () {
+            document.getElementById('preview-category').textContent = this.options[this.selectedIndex].text || 'Category';
+        });
+        document.getElementById('coupon-code').addEventListener('input', function () {
+            document.getElementById('preview-code').textContent = this.value || 'COUPONCODE';
+        });
+        document.getElementById('coupon-description').addEventListener('input', function () {
+            document.getElementById('preview-desc').textContent = this.value || 'Your coupon description...';
+        });
+        document.getElementById('coupon-price').addEventListener('input', function () {
+            document.getElementById('preview-price').textContent = Utils.formatCoins(this.value || 0);
+        });
+    </script>
+</body>
+
+</html>

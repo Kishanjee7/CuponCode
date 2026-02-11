@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CuponCode Setup Guide</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <style>
+        .setup-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--space-8);
+        }
+
+        .step {
+            margin-bottom: var(--space-8);
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            color: white;
+            font-weight: var(--fw-bold);
+            font-size: var(--fs-lg);
+            margin-right: var(--space-3);
+        }
+
+        .step-title {
+            display: inline;
+            font-size: var(--fs-xl);
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            font-family: var(--font-mono);
+            font-size: var(--fs-sm);
+            overflow-x: auto;
+            color: var(--text-accent);
+            line-height: 1.8;
+            margin: var(--space-4) 0;
+        }
+
+        .highlight {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--text-coin);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: var(--fw-semibold);
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .check-item input[type="checkbox"] {
+            margin-top: 4px;
+            accent-color: var(--accent-primary);
+            width: 18px;
+            height: 18px;
+        }
+
+        .tip-card {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            margin: var(--space-4) 0;
+        }
+
+        .warning-card {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            margin: var(--space-4) 0;
+        }
+
+        ol li,
+        ul li {
+            margin-bottom: var(--space-2);
+            line-height: 1.6;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-glass);
+            border-radius: 3px;
+            margin: var(--space-6) 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-gradient);
+            border-radius: 3px;
+            transition: width 0.5s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="setup-container page-transition">
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: var(--space-12);">
+            <div style="font-size: 4rem; margin-bottom: var(--space-4);" class="animate-float">🎟️</div>
+            <h1 style="font-size: var(--fs-3xl); margin-bottom: var(--space-2);">CuponCode Setup Guide</h1>
+            <p style="color: var(--text-secondary);">Follow these 7 steps to deploy your coupon marketplace</p>
+            <div class="progress-bar mt-6">
+                <div class="progress-fill" id="progress" style="width: 0%"></div>
+            </div>
+            <p style="font-size: var(--fs-xs); color: var(--text-tertiary);" id="progress-text">0 of 7 steps complete
+            </p>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="step card">
+            <div class="check-item" style="border: none; padding-bottom: 0;">
+                <input type="checkbox" onchange="updateProgress()">
+                <div>
+                    <span class="step-number">1</span>
+                    <h3 class="step-title">Create Google Spreadsheet</h3>
+                </div>
+            </div>
+            <div style="padding-left: var(--space-10);">
+                <ol style="color: var(--text-secondary);">
+                    <li>Go to <a href="https://sheets.google.com" target="_blank"
+                            style="color: var(--text-accent);">sheets.google.com</a></li>
+                    <li>Click <strong>+ Blank spreadsheet</strong></li>
+                    <li>Copy the <span class="highlight">Spreadsheet ID</span> from the URL bar:</li>
+                </ol>
+                <div class="code-block">
+                    https://docs.google.com/spreadsheets/d/<span
+                        class="highlight">THIS_IS_YOUR_SPREADSHEET_ID</span>/edit
+                </div>
+                <div class="tip-card">
+                    💡 <strong>Tip:</strong> Rename the spreadsheet to "CuponCode Database" for easy identification.
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step card">
+            <div class="check-item" style="border: none; padding-bottom: 0;">
+                <input type="checkbox" onchange="updateProgress()">
+                <div>
+                    <span class="step-number">2</span>
+                    <h3 class="step-title">Open Apps Script Editor</h3>
+                </div>
+            </div>
+            <div style="padding-left: var(--space-10);">
+                <ol style="color: var(--text-secondary);">
+                    <li>In your Google Sheet, click <strong>Extensions → Apps Script</strong></li>
+                    <li>This opens the Apps Script code editor in a new tab</li>
+                    <li>Delete the default <code>function myFunction(){}</code> code</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step card">
+            <div class="check-item" style="border: none; padding-bottom: 0;">
+                <input type="checkbox" onchange="updateProgress()">
+                <div>
+                    <span class="step-number">3</span>
+                    <h3 class="step-title">Add Backend Code</h3>
+                </div>
+            </div>
+            <div style="padding-left: var(--space-10);">
+                <ol style="color: var(--text-secondary);">
+                    <li>In the Apps Script editor, paste the contents of <code>backend/Code.gs</code></li>
+                    <li>Click the <strong>+</strong> button → <strong>Script</strong> → name it <code>Setup</code></li>
+                    <li>Paste the contents of <code>backend/Setup.gs</code></li>
+                    <li>In <code>Code.gs</code>, update these three lines at the top:</li>
+                </ol>
+                <div class="code-block">
+                    const SPREADSHEET_ID = '<span class="highlight">paste_your_spreadsheet_id_here</span>';<br>
+                    const ADMIN_EMAIL = '<span class="highlight">your-email@gmail.com</span>';<br>
+                    const ADMIN_PASSWORD = '<span class="highlight">your_secure_password</span>';
+                </div>
+                <div class="warning-card">
+                    ⚠️ <strong>Important:</strong> Use a strong password for the admin account. This is not just a
+                    placeholder — it's the actual password you'll use to log in.
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step card">
+            <div class="check-item" style="border: none; padding-bottom: 0;">
+                <input type="checkbox" onchange="updateProgress()">
+                <div>
+                    <span class="step-number">4</span>
+                    <h3 class="step-title">Initialize Database</h3>
+                </div>
+            </div>
+            <div style="padding-left: var(--space-10);">
+                <ol style="color: var(--text-secondary);">
+                    <li>In the Apps Script editor, select <strong>setupDatabase</strong> from the function dropdown (top
+                        toolbar)</li>
+                    <li>Click the <strong>▶ Run</strong> button</li>
+                    <li>A dialog will ask for authorization — click <strong>Review Permissions</strong></li>
+                    <li>Select your Google account</li>
+                    <li>Click <strong>Advanced → Go to CuponCode (unsafe)</strong></li>
+                    <li>Click <strong>Allow</strong></li>
+                    <li>Check the <strong>Execution Log</strong> — you should see "✅ Setup complete!"</li>
+                </ol>
+                <div class="tip-card">
+                    💡 <strong>Verify:</strong> Go back to your Google Sheet — you should now see 6 tabs: Users,
+                    Coupons, Transactions, Categories, OTP, Referrals. The Categories tab should have 8 pre-filled
+                    categories.
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step card">
+            <div class="check-item" style="border: none; padding-bottom: 0;">
+                <input type="checkbox" onchange="updateProgress()">
+                <div>
+                    <span class="step-number">5</span>
+                    <h3 class="step-title">Deploy as Web App</h3>
+                </div>
+            </div>
+            <div style="padding-left: var(--space-10);">
+                <ol style="color: var(--text-secondary);">
+                    <li>Click <strong>Deploy → New deployment</strong> (top right)</li>
+                    <li>Click the ⚙️ gear icon → Select type: <strong>Web app</strong></li>
+                    <li>Fill in the form:
+                        <ul style="margin-top: var(--space-2);">
+                            <li><strong>Description:</strong> CuponCode API v1</li>
+                            <li><strong>Execute as:</strong> Me</li>
+                            <li><strong>Who has access:</strong> Anyone</li>
+                        </ul>
+                    </li>
+                    <li>Click <strong>Deploy</strong></li>
+                    <li>Copy the <span class="highlight">Web App URL</span> that appears</li>
+                </ol>
+                <div class="code-block">
+                    https://script.google.com/macros/s/<span class="highlight">YOUR_DEPLOYMENT_ID</span>/exec
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="step card">
+            <div class="check-item" style="border: none; padding-bottom: 0;">
+                <input type="checkbox" onchange="updateProgress()">
+                <div>
+                    <span class="step-number">6</span>
+                    <h3 class="step-title">Configure Frontend</h3>
+                </div>
+            </div>
+            <div style="padding-left: var(--space-10);">
+                <ol style="color: var(--text-secondary);">
+                    <li>Open <code>js/config.js</code> in your code editor</li>
+                    <li>Replace the placeholder API URL:</li>
+                </ol>
+                <div class="code-block">
+                    // Before:<br>
+                    API_URL: 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL',<br>
+                    <br>
+                    // After:<br>
+                    API_URL: '<span class="highlight">https://script.google.com/macros/s/YOUR_ID/exec</span>',
+                </div>
+                <ol start="3" style="color: var(--text-secondary);">
+                    <li>Save the file</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Step 7 -->
+        <div class="step card">
+            <div class="check-item" style="border: none; padding-bottom: 0;">
+                <input type="checkbox" onchange="updateProgress()">
+                <div>
+                    <span class="step-number">7</span>
+                    <h3 class="step-title">Launch & Test</h3>
+                </div>
+            </div>
+            <div style="padding-left: var(--space-10);">
+                <ol style="color: var(--text-secondary);">
+                    <li>Open <code>index.html</code> in your browser (or deploy to a static host)</li>
+                    <li>Click <strong>Sign In</strong> and login with your admin credentials</li>
+                    <li>Test the admin panel at <code>admin.html</code></li>
+                    <li>Try registering a new user account (you'll receive an OTP email)</li>
+                </ol>
+                <div class="tip-card">
+                    💡 <strong>First request may take 10-20 seconds</strong> as Google Apps Script "cold starts."
+                    Subsequent requests will be faster.
+                </div>
+                <div class="warning-card">
+                    ⚠️ <strong>Hosting note:</strong> If opening as a local file (<code>file:///</code>), some browsers
+                    may block API requests. For best results, use a local server:
+                    <div class="code-block" style="margin-top: var(--space-2);">
+                        npx serve .
+                    </div>
+                    Or deploy to GitHub Pages, Netlify, or Vercel.
+                </div>
+            </div>
+        </div>
+
+        <!-- Success -->
+        <div class="card" id="success-card"
+            style="text-align: center; display: none; background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(16,185,129,0.05)); border-color: rgba(34,197,94,0.3);">
+            <div style="font-size: 3rem; margin-bottom: var(--space-4);">🎉</div>
+            <h3 style="color: var(--success); margin-bottom: var(--space-2);">Setup Complete!</h3>
+            <p style="color: var(--text-secondary);">Your CuponCode marketplace is ready to go.</p>
+            <a href="index.html" class="btn btn-primary btn-lg mt-6">🏪 Open Marketplace</a>
+        </div>
+
+        <!-- Footer -->
+        <div
+            style="text-align: center; margin-top: var(--space-12); padding-top: var(--space-6); border-top: 1px solid var(--border-subtle);">
+            <p style="color: var(--text-tertiary); font-size: var(--fs-sm);">
+                Need help? Check the <a href="README.md" style="color: var(--text-accent);">README.md</a> for more
+                details.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function updateProgress() {
+            const checks = document.querySelectorAll('input[type="checkbox"]');
+            const done = [...checks].filter(c => c.checked).length;
+            document.getElementById('progress').style.width = (done / checks.length * 100) + '%';
+            document.getElementById('progress-text').textContent = `${done} of ${checks.length} steps complete`;
+            document.getElementById('success-card').style.display = done === checks.length ? 'block' : 'none';
+        }
+    </script>
+</body>
+
+</html>
