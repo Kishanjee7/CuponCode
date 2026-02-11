@@ -3,11 +3,11 @@
 // ============================================
 
 const Router = {
-    /**
-     * Generate sidebar HTML for user pages
-     */
-    userSidebar() {
-        return `
+  /**
+   * Generate sidebar HTML for user pages
+   */
+  userSidebar() {
+    return `
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <a href="index.html" class="sidebar-logo">
@@ -34,32 +34,28 @@ const Router = {
         </div>
       </nav>
       <div class="sidebar-footer">
-        <div class="sidebar-user" onclick="document.getElementById('user-dropdown').classList.toggle('open')">
+        <div class="sidebar-user">
           <div class="avatar">U</div>
           <div class="sidebar-user-info">
             <div class="sidebar-user-name">User</div>
             <div class="sidebar-user-email">user@email.com</div>
           </div>
-          <span style="color: var(--text-tertiary);">⋮</span>
         </div>
-        <div class="dropdown" id="user-dropdown">
-          <div class="dropdown-menu" style="bottom: 100%; top: auto; left: 0; right: 0;">
-            <button class="dropdown-item" onclick="Router.showChangePassword()">🔑 Change Password</button>
-            <div class="dropdown-divider"></div>
-            <button class="dropdown-item" onclick="Session.logout()" style="color: var(--danger);">🚪 Logout</button>
-          </div>
+        <div style="display: flex; gap: 8px; margin-top: 8px;">
+          <button class="btn btn-ghost btn-sm" style="flex: 1;" onclick="Router.showChangePassword()">🔑 Password</button>
+          <button class="btn btn-ghost btn-sm" style="flex: 1; color: var(--danger);" onclick="Session.logout()">🚪 Logout</button>
         </div>
       </div>
     </aside>
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
     `;
-    },
+  },
 
-    /**
-     * Generate sidebar HTML for admin pages
-     */
-    adminSidebar() {
-        return `
+  /**
+   * Generate sidebar HTML for admin pages
+   */
+  adminSidebar() {
+    return `
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <a href="admin.html" class="sidebar-logo">
@@ -94,13 +90,13 @@ const Router = {
     </aside>
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
     `;
-    },
+  },
 
-    /**
-     * Generate top header
-     */
-    topHeader(title) {
-        return `
+  /**
+   * Generate top header
+   */
+  topHeader(title) {
+    return `
     <header class="top-header">
       <div class="header-left">
         <button class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebar-overlay').classList.toggle('open');">☰</button>
@@ -112,16 +108,17 @@ const Router = {
           <span class="coin-amount">0</span>
         </a>
         <div class="avatar" style="cursor: pointer;" onclick="window.location.href='dashboard.html'"></div>
+        <button class="btn btn-ghost btn-sm" onclick="Session.logout()" title="Logout" style="color: var(--danger); padding: 6px 10px; font-size: 16px;">🚪</button>
       </div>
     </header>
     `;
-    },
+  },
 
-    /**
-     * Generate mobile bottom nav
-     */
-    mobileNav() {
-        return `
+  /**
+   * Generate mobile bottom nav
+   */
+  mobileNav() {
+    return `
     <nav class="mobile-bottom-nav">
       <div class="bottom-nav-items">
         <a href="index.html" class="bottom-nav-item"><span class="nav-item-icon">🏪</span>Market</a>
@@ -132,16 +129,16 @@ const Router = {
       </div>
     </nav>
     `;
-    },
+  },
 
-    /**
-     * Show Change Password Modal
-     */
-    showChangePassword() {
-        const backdrop = document.createElement('div');
-        backdrop.className = 'modal-backdrop active';
-        backdrop.id = 'change-pwd-modal';
-        backdrop.innerHTML = `
+  /**
+   * Show Change Password Modal
+   */
+  showChangePassword() {
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop active';
+    backdrop.id = 'change-pwd-modal';
+    backdrop.innerHTML = `
       <div class="modal">
         <button class="modal-close" onclick="document.getElementById('change-pwd-modal').remove()">✕</button>
         <h3 class="modal-title">Change Password</h3>
@@ -162,7 +159,7 @@ const Router = {
         </form>
       </div>
     `;
-        document.body.appendChild(backdrop);
-        backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.remove(); });
-    }
+    document.body.appendChild(backdrop);
+    backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.remove(); });
+  }
 };
