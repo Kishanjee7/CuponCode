@@ -263,64 +263,68 @@ function recordTransaction(userId, type, amount, relatedId, description) {
 }
 
 // ---- MAIN ROUTER ----
+function handleRequest(data) {
+  const action = data.action;
+
+  // Ensure admin seed
+  seedAdmin();
+
+  // Auth check for protected routes
+  const protectedActions = [
+    'changePassword', 'uploadCoupon', 'buyCoupon', 'getMyCoupons', 'getMyVault',
+    'getWallet', 'getReferralInfo', 'getDashboard',
+    'adminGetStats', 'adminGetPendingCoupons', 'adminVerifyCoupon', 'adminGetAllCoupons',
+    'adminManageCategory', 'adminGetUsers', 'adminManageUser', 'adminAdjustCoins', 'adminGetTransactions'
+  ];
+
+  if (protectedActions.includes(action)) {
+    if (!data.userId) {
+      return jsonResponse({ success: false, error: 'SESSION_EXPIRED' });
+    }
+    const user = findUserById(data.userId);
+    if (!user || user.status !== 'active') {
+      return jsonResponse({ success: false, error: 'SESSION_EXPIRED' });
+    }
+
+    // Admin check
+    if (action.startsWith('admin') && user.role !== 'admin') {
+      return jsonResponse({ success: false, error: 'Unauthorized' });
+    }
+  }
+
+  switch (action) {
+    case 'register': return handleRegister(data);
+    case 'verifyOTP': return handleVerifyOTP(data);
+    case 'resendOTP': return handleResendOTP(data);
+    case 'login': return handleLogin(data);
+    case 'forgotPassword': return handleForgotPassword(data);
+    case 'resetPassword': return handleResetPassword(data);
+    case 'changePassword': return handleChangePassword(data);
+    case 'getCategories': return handleGetCategories();
+    case 'getCoupons': return handleGetCoupons(data);
+    case 'uploadCoupon': return handleUploadCoupon(data);
+    case 'buyCoupon': return handleBuyCoupon(data);
+    case 'getMyCoupons': return handleGetMyCoupons(data);
+    case 'getMyVault': return handleGetMyVault(data);
+    case 'getWallet': return handleGetWallet(data);
+    case 'getReferralInfo': return handleGetReferralInfo(data);
+    case 'getDashboard': return handleGetDashboard(data);
+    case 'adminGetStats': return handleAdminGetStats();
+    case 'adminGetAllCoupons': return handleAdminGetAllCoupons(data);
+    case 'adminVerifyCoupon': return handleAdminVerifyCoupon(data);
+    case 'adminManageCategory': return handleAdminManageCategory(data);
+    case 'adminGetUsers': return handleAdminGetUsers(data);
+    case 'adminManageUser': return handleAdminManageUser(data);
+    case 'adminAdjustCoins': return handleAdminAdjustCoins(data);
+    case 'adminGetTransactions': return handleAdminGetTransactions(data);
+    default: return jsonResponse({ success: false, error: 'Unknown action' });
+  }
+}
+
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
-    const action = data.action;
-
-    // Ensure admin seed
-    seedAdmin();
-
-    // Auth check for protected routes
-    const protectedActions = [
-      'changePassword', 'uploadCoupon', 'buyCoupon', 'getMyCoupons', 'getMyVault',
-      'getWallet', 'getReferralInfo', 'getDashboard',
-      'adminGetStats', 'adminGetPendingCoupons', 'adminVerifyCoupon', 'adminGetAllCoupons',
-      'adminManageCategory', 'adminGetUsers', 'adminManageUser', 'adminAdjustCoins', 'adminGetTransactions'
-    ];
-
-    if (protectedActions.includes(action)) {
-      if (!data.userId) {
-        return jsonResponse({ success: false, error: 'SESSION_EXPIRED' });
-      }
-      const user = findUserById(data.userId);
-      if (!user || user.status !== 'active') {
-        return jsonResponse({ success: false, error: 'SESSION_EXPIRED' });
-      }
-
-      // Admin check
-      if (action.startsWith('admin') && user.role !== 'admin') {
-        return jsonResponse({ success: false, error: 'Unauthorized' });
-      }
-    }
-
-    switch (action) {
-      case 'register': return handleRegister(data);
-      case 'verifyOTP': return handleVerifyOTP(data);
-      case 'resendOTP': return handleResendOTP(data);
-      case 'login': return handleLogin(data);
-      case 'forgotPassword': return handleForgotPassword(data);
-      case 'resetPassword': return handleResetPassword(data);
-      case 'changePassword': return handleChangePassword(data);
-      case 'getCategories': return handleGetCategories();
-      case 'getCoupons': return handleGetCoupons(data);
-      case 'uploadCoupon': return handleUploadCoupon(data);
-      case 'buyCoupon': return handleBuyCoupon(data);
-      case 'getMyCoupons': return handleGetMyCoupons(data);
-      case 'getMyVault': return handleGetMyVault(data);
-      case 'getWallet': return handleGetWallet(data);
-      case 'getReferralInfo': return handleGetReferralInfo(data);
-      case 'getDashboard': return handleGetDashboard(data);
-      case 'adminGetStats': return handleAdminGetStats();
-      case 'adminGetAllCoupons': return handleAdminGetAllCoupons(data);
-      case 'adminVerifyCoupon': return handleAdminVerifyCoupon(data);
-      case 'adminManageCategory': return handleAdminManageCategory(data);
-      case 'adminGetUsers': return handleAdminGetUsers(data);
-      case 'adminManageUser': return handleAdminManageUser(data);
-      case 'adminAdjustCoins': return handleAdminAdjustCoins(data);
-      case 'adminGetTransactions': return handleAdminGetTransactions(data);
-      default: return jsonResponse({ success: false, error: 'Unknown action' });
-    }
+    return handleRequest(data);
   } catch (err) {
     Logger.log('Error: ' + err.toString());
     return jsonResponse({ success: false, error: 'Server error: ' + err.message });
@@ -328,6 +332,19 @@ function doPost(e) {
 }
 
 function doGet(e) {
+  // If payload param exists, handle as API request
+  // (browsers convert POST→GET on GAS 302 redirect, so frontend sends data via GET params)
+  if (e && e.parameter && e.parameter.payload) {
+    try {
+      const data = JSON.parse(e.parameter.payload);
+      return handleRequest(data);
+    } catch (err) {
+      Logger.log('doGet API Error: ' + err.toString());
+      return jsonResponse({ success: false, error: 'Server error: ' + err.message });
+    }
+  }
+
+  // Otherwise show health check dashboard
   seedAdmin();
   const users = getSheetData(SHEETS.USERS).length;
   const coupons = getSheetData(SHEETS.COUPONS).length;
@@ -355,7 +372,7 @@ function doGet(e) {
         <div class="stat"><div class="stat-val">${coupons}</div><div class="stat-lbl">Coupons</div></div>
         <div class="stat"><div class="stat-val">${cats}</div><div class="stat-lbl">Categories</div></div>
       </div>
-      <p>API is running. Use POST requests from the frontend.</p>
+      <p>API is running.</p>
     </div></body></html>`;
 
   return HtmlService.createHtmlOutput(html)

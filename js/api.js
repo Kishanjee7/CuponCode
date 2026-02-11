@@ -4,7 +4,9 @@
 
 const API = {
     /**
-     * Make a POST request to the Google Apps Script backend
+     * Make a request to the Google Apps Script backend.
+     * GAS redirects 302 which converts POST→GET in browsers,
+     * so we pass the payload as a URL parameter instead.
      */
     async post(action, data = {}) {
         try {
@@ -15,11 +17,12 @@ const API = {
                 ...(session ? { userId: session.id, sessionToken: session.token } : {})
             };
 
-            const response = await fetch(CONFIG.API_URL, {
-                method: 'POST',
-                redirect: 'follow',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(payload)
+            const encodedPayload = encodeURIComponent(JSON.stringify(payload));
+            const url = `${CONFIG.API_URL}?payload=${encodedPayload}`;
+
+            const response = await fetch(url, {
+                method: 'GET',
+                redirect: 'follow'
             });
 
             const text = await response.text();
