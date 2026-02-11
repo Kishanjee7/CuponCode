@@ -215,4 +215,10 @@ CuponCode/
 
 ---
 
+<img width="1587" height="2245" alt="CuponCode Poster" src="https://github.com/user-attachments/assets/c8c58687-a64f-4b2a-85aa-6281a93680ff" />
+
+
+
+---
+
 <p align="center">Built with ❤️ using vanilla HTML, CSS, JS + Google Apps Script</p>
