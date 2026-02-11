@@ -17,12 +17,19 @@ const API = {
 
             const response = await fetch(CONFIG.API_URL, {
                 method: 'POST',
-                mode: 'cors',
-                headers: { 'Content-Type': 'text/plain' },
+                redirect: 'follow',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(payload)
             });
 
-            const result = await response.json();
+            const text = await response.text();
+            let result;
+            try {
+                result = JSON.parse(text);
+            } catch (e) {
+                console.error('Failed to parse API response:', text.substring(0, 200));
+                return { success: false, error: 'Invalid server response. Please try again.' };
+            }
 
             if (result.error === 'SESSION_EXPIRED') {
                 Session.clear();
